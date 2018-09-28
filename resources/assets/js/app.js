@@ -14,7 +14,6 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
 Vue.component('task', require('./components/TaskComponent.vue'));
 Vue.component('create-task', require('./components/CreateTaskComponent.vue'));
 Vue.component('update-task', require('./components/UpdateTaskComponent.vue'));
