@@ -10,59 +10,58 @@
           </div>
           <br>
           <div class="panel-body">
-            <table class="table table-striped table-responsive" v-if="tasks.length > 0">
-              <tbody>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Action</th>
-                </tr>
-                <tr v-for="(task, index) in tasks">
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ task.name }}</td>
-                  <td>{{ task.description }}</td>
-                  <td>
-                    <button class="btn btn-success btn-xs" @click="initUpdate(index)">Edit</button>
-                    <button class="btn btn-danger btn-xs" @click="deleteTask(index)">Delete</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <v-client-table :data="tasks" :columns="columns" :options="options">
+              <button slot="edit" slot-scope="props" class="btn btn-success btn-xs" @click="initUpdate(props.index -1)">Edit</button>
+              <button slot="delete" slot-scope="props" class="btn btn-danger btn-xs" @click="deleteTask(props.index -1)">Delete</button>
+            </v-client-table>
+            <p class="vue-pagination-ad">
+              Like the pagination component and want to use it independently? Try <a target="_blank" href="https://www.npmjs.com/package/vue-pagination-2">vue-pagination-2</a>
+            </p>
           </div>
         </div>
       </div>
     </div>
     <create-task @new="addTask"></create-task>
-    <update-task  :update_task = "update_task"></update-task>
+    <update-task :update_task = "update_task"></update-task>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+import {ServerTable, ClientTable, Event} from 'vue-tables-2';
+
+Vue.use(ClientTable, {}, false, 'bootstrap4');
+
 export default {
-  data(){
-    return {
+  data() {
+    return{
       errors: [],
       tasks: [],
-      update_task: {}
+      update_task: {},
+      columns: ['id', 'name', 'description', 'edit', 'delete'],
+      options: {
+        headings: {
+          id: 'ID',
+          name: 'Name',
+          description: 'Description',
+          edit: 'Edit',
+          delete: 'Delete'
+        }
+      },
     }
   },
   mounted()
   {
-    this.readTasks();
+    axios.get('/task')
+    .then(response => {
+      this.tasks = response.data.tasks
+    });
   },
   methods: {
     initAddTask()
     {
       this.errors = [];
       $("#add_task_model").modal("show");
-    },
-    readTasks()
-    {
-      axios.get('/task')
-      .then(response => {
-        this.tasks = response.data.tasks
-      });
     },
     addTask(task)
     {
@@ -72,6 +71,9 @@ export default {
     {
       this.errors = [];
       $("#update_task_model").modal("show");
+      console.log(this.tasks);
+      console.log(index);
+      console.log(this.tasks[index]);
       this.update_task = this.tasks[index];
     },
     deleteTask(index)
