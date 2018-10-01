@@ -53,7 +53,6 @@
           if (error.response.data.errors.name) {
             this.errors.push(error.response.data.errors.name[0]);
           }
-
           if (error.response.data.errors.description) {
             this.errors.push(error.response.data.errors.description[0]);
           }

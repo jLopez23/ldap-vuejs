@@ -11,8 +11,8 @@
           <br>
           <div class="panel-body">
             <v-client-table :data="tasks" :columns="columns" :options="options">
-              <button slot="edit" slot-scope="props" class="btn btn-success btn-xs" @click="initUpdate(props.row.id - 1)">Edit</button>
-              <button slot="delete" slot-scope="props" class="btn btn-danger btn-xs" @click="deleteTask(props.row.id - 1)">Delete</button>
+              <button slot="edit" slot-scope="props" class="btn btn-success btn-xs" @click="initUpdate(props.index -1)">Edit</button>
+              <button slot="delete" slot-scope="props" class="btn btn-danger btn-xs" @click="deleteTask(props.index -1)">Delete</button>
             </v-client-table>
             <p class="vue-pagination-ad">
               Like the pagination component and want to use it independently? Try <a target="_blank" href="https://www.npmjs.com/package/vue-pagination-2">vue-pagination-2</a>
@@ -22,7 +22,7 @@
       </div>
     </div>
     <create-task @new="addTask"></create-task>
-    <update-task  :update_task = "update_task"></update-task>
+    <update-task :update_task = "update_task"></update-task>
   </div>
 </template>
 
@@ -71,6 +71,9 @@ export default {
     {
       this.errors = [];
       $("#update_task_model").modal("show");
+      console.log(this.tasks);
+      console.log(index);
+      console.log(this.tasks[index]);
       this.update_task = this.tasks[index];
     },
     deleteTask(index)
